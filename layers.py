@@ -1,5 +1,6 @@
 import torch
 from torch import nn
+from math import sqrt
 
 
 def get_activation(activation_name):
@@ -42,7 +43,7 @@ class MultiHeadAttention(nn.Module):
             )
         self.n_heads = n_heads
         self.d = hidden_size // n_heads
-        self.sqrt_d = self.d ** 0.5
+        self.sqrt_d = sqrt(self.d)
         self.heads_size = self.d * n_heads
 
         self.query = nn.Linear(hidden_size, self.heads_size)
@@ -92,7 +93,7 @@ class MultiHeadAttention(nn.Module):
 
         # Attention scores
         attn_scores = torch.matmul(q, k.transpose(-2, -1)) / self.sqrt_d
-        attn_scores = attn_scores.masked_fill(attn_mask == 0, -1e9)
+        attn_scores = attn_scores + attn_mask   # Add mask WHY?
         attn_probs = self.softmax(attn_scores)
         attn_probs = self.attn_dropout(attn_probs)
 
@@ -115,7 +116,7 @@ class FeedForward(nn.Module):
             nn.Linear(hidden_size, inner_size),
             get_activation(hidden_act),
             nn.Linear(inner_size, hidden_size),
-            nn.Dropout(hidden_dropout_prob),        # Why does the paper implement dropout here?
+            nn.Dropout(hidden_dropout_prob),        # Why dropout here?
             )
         self.norm = nn.LayerNorm(hidden_size, eps=layer_norm_eps)
         
