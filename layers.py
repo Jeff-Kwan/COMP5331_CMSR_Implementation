@@ -22,11 +22,10 @@ class MLP(nn.Module):
     def __init__(self, in_dim, out_dim, dropout=0.0, activation="relu", bn=False):
         super(MLP, self).__init__()
         self.layers = nn.Sequential(
-            nn.Linear(in_dim, out_dim),     # Only 1 layer?
+            nn.Linear(in_dim, out_dim),     # Only 1 linear projection
             nn.BatchNorm1d(out_dim) if bn else nn.Identity(),
             get_activation(activation),
-            nn.Dropout(dropout) if dropout > 0 else nn.Identity(),
-            )
+            nn.Dropout(dropout) if dropout > 0 else nn.Identity())
         
     def forward(self, x):
         return self.layers(x)
@@ -39,22 +38,23 @@ class MultiHeadAttention(nn.Module):
         if hidden_size % n_heads != 0:
             raise ValueError(
                 "The hidden size (%d) is not a multiple of the number of attention "
-                "heads (%d)" % (hidden_size, n_heads)
-            )
+                "heads (%d)" % (hidden_size, n_heads))
         self.n_heads = n_heads
         self.d = hidden_size // n_heads
         self.sqrt_d = sqrt(self.d)
-        self.heads_size = self.d * n_heads
 
-        self.query = nn.Linear(hidden_size, self.heads_size)
-        self.key = nn.Linear(hidden_size, self.heads_size)
-        self.value = nn.Linear(hidden_size, self.heads_size)
+        self.query = nn.Linear(hidden_size, hidden_size)
+        self.key = nn.Linear(hidden_size, hidden_size)
+        self.value = nn.Linear(hidden_size, hidden_size)
 
         # MLP adjustments
         self.with_mlp = with_mlp
         if with_mlp:
-            self.mlp_query = MLP(self.heads_size, self.heads_size, bn=False)
-            self.mlp_key = MLP(self.heads_size, self.heads_size, bn=False)
+            self.mlp_query = MLP(hidden_size, hidden_size, bn=False)
+            self.mlp_key = MLP(hidden_size, hidden_size, bn=False)
+        else:
+            self.mlp_query = nn.Identity()
+            self.mlp_key = nn.Identity()
 
         # Setting QKV weights
         if q_weight is not None:
@@ -64,48 +64,41 @@ class MultiHeadAttention(nn.Module):
         if v_weight is not None:
             self.value.weight = v_weight
 
-        self.softmax = nn.Softmax(dim=-1)
-        self.attn_dropout = nn.Dropout(attn_dropout_prob)
-
-        self.dense = nn.Linear(hidden_size, hidden_size)
+        self.softmax = nn.Sequential(nn.Softmax(dim=-1), nn.Dropout(attn_dropout_prob))
+        self.out = nn.Sequential(nn.Linear(hidden_size, hidden_size), nn.Dropout(hidden_dropout_prob))
         self.LayerNorm = nn.LayerNorm(hidden_size, eps=layer_norm_eps)
-        self.out_dropout = nn.Dropout(hidden_dropout_prob)
 
     def forward(self, x, attn_mask):
         # x: [batch_size, seq_len, hidden_size]
         # attn_mask: [batch_size, seq_len, seq_len]
-        batch_size, seq_len, _ = x.size()
+        B, S, D = x.size()
 
         # Linear projections
         q = self.query(x)
         k = self.key(x)
         v = self.value(x)
 
-        # MLP adjustments
-        if self.with_mlp:
-            q = self.mlp_query(q)
-            k = self.mlp_key(k)
+        # MLP adjustments (Identity if initialized with with_mlp=False)
+        q = self.mlp_query(q)
+        k = self.mlp_key(k)
 
         # Reshape Q, K, V
-        q = q.view(batch_size, seq_len, self.n_heads, self.d).transpose(1, 2)
-        k = k.view(batch_size, seq_len, self.n_heads, self.d).transpose(1, 2)
-        v = v.view(batch_size, seq_len, self.n_heads, self.d).transpose(1, 2)
+        q = q.view(B, S, self.n_heads, self.d).transpose(1, 2)
+        k = k.view(B, S, self.n_heads, self.d).transpose(1, 2)
+        v = v.view(B, S, self.n_heads, self.d).transpose(1, 2)
 
         # Attention scores
-        attn_scores = torch.matmul(q, k.transpose(-2, -1)) / self.sqrt_d
-        attn_scores = attn_scores + attn_mask   # Add mask WHY?
-        attn_probs = self.softmax(attn_scores)
-        attn_probs = self.attn_dropout(attn_probs)
+        attn_scores = torch.matmul(q, k.transpose(-2, -1)) / self.sqrt_d 
+        attn_scores = attn_scores + attn_mask.unsqueeze(1)  # Same mask over each head
+        attn_probs = self.softmax(attn_scores)  # Softmax w/ dropout
 
         # Contextual embeddings
         attn_output = torch.matmul(attn_probs, v)
-        attn_output = attn_output.transpose(1, 2).contiguous().view(batch_size, seq_len, self.heads_size)
+        attn_output = attn_output.transpose(1, 2).contiguous().view(B, S, D)
 
         # Output projection
-        attn_output = self.dense(attn_output)
-        attn_output = self.out_dropout(attn_output)
+        attn_output = self.out(attn_output)
         output = self.LayerNorm(x + attn_output)
-
         return output        
     
 
@@ -116,8 +109,7 @@ class FeedForward(nn.Module):
             nn.Linear(hidden_size, inner_size),
             get_activation(hidden_act),
             nn.Linear(inner_size, hidden_size),
-            nn.Dropout(hidden_dropout_prob),        # Why dropout here?
-            )
+            nn.Dropout(hidden_dropout_prob))
         self.norm = nn.LayerNorm(hidden_size, eps=layer_norm_eps)
         
         if ffn_dict is not None:
@@ -150,12 +142,12 @@ class TransformerSingleEncoder(nn.Module):
                  layer_norm_eps=1e-12, q_weight=None, k_weight=None, v_weight=None, 
                  with_mlp=False, ffn_dict=None):
         super(TransformerSingleEncoder, self).__init__()
-        layers = []
+
         # In code implementation, there is no n_layers implementation hence n_layers=1 by default there
-        for l in range(n_layers):
-            layers.append(TransformerLayer(n_heads, hidden_size, inner_size, hidden_dropout_prob, attn_dropout_prob,
-                                            hidden_act, layer_norm_eps, q_weight, k_weight, v_weight, with_mlp, ffn_dict))
-        self.layers = nn.ModuleList(layers)
+        self.layers = nn.ModuleList([TransformerLayer(n_heads, hidden_size, inner_size, 
+                                        hidden_dropout_prob, attn_dropout_prob, hidden_act, 
+                                        layer_norm_eps, q_weight, k_weight, v_weight, with_mlp, 
+                                        ffn_dict) for _ in range(n_layers)])
 
     def forward(self, x, attn_mask):
         outputs = []

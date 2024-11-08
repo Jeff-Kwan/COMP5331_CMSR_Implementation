@@ -10,5 +10,4 @@ def calculate_item_freq(item_num, item_id_tensor):
     return torch.bincount(item_id_tensor, minlength=item_num)
 
 def weight_decay(item_freq, alpha, beta):
-    weight = alpha - torch.tanh(beta * (item_freq-1))
-    return weight
+    return alpha - torch.tanh(beta * (item_freq-1))
