@@ -69,7 +69,7 @@ class CATSR(SequentialRecommender):
         elif self.loss_type=='CE':
             self.loss_fct = nn.CrossEntropyLoss()
         elif self.loss_type=='WCE':
-            self.loss_fct = nn.element_weighted_loss()
+            self.loss_fct = element_weighted_loss()
             #
             self.alpha = config['alpha']
             self.beta = config['beta']
