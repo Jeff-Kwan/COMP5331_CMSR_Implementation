@@ -1,0 +1,359 @@
+Sat 09 Nov 2024 21:41:10 INFO  
+General Hyper Parameters:
+gpu_id = 0
+use_gpu = True
+seed = 2020
+state = INFO
+reproducibility = True
+data_path = dataset\us
+checkpoint_dir = saved/
+show_progress = True
+save_dataset = False
+dataset_save_path = None
+save_dataloaders = False
+dataloaders_save_path = None
+log_wandb = False
+
+Training Hyper Parameters:
+epochs = 300
+train_batch_size = 256
+learner = adam
+learning_rate = 0.001
+train_neg_sample_args = {'distribution': 'none', 'sample_num': 'none', 'alpha': 'none', 'dynamic': False, 'candidate_num': 0}
+eval_step = 10
+stopping_step = 50
+clip_grad_norm = None
+weight_decay = 0.0
+loss_decimal_place = 4
+
+Evaluation Hyper Parameters:
+eval_args = {'split': {'LS': 'valid_and_test'}, 'order': 'TO', 'group_by': 'user', 'mode': {'valid': 'uni99', 'test': 'uni99'}}
+repeatable = True
+metrics = ['Hit', 'NDCG', 'MRR']
+topk = [5, 10, 20]
+valid_metric = MRR@10
+valid_metric_bigger = True
+eval_batch_size = 4096
+metric_decimal_place = 4
+
+Dataset Hyper Parameters:
+field_separator = 	
+seq_separator =  
+USER_ID_FIELD = user_id
+ITEM_ID_FIELD = item_id
+RATING_FIELD = rating
+TIME_FIELD = timestamp
+seq_len = None
+LABEL_FIELD = label
+threshold = None
+NEG_PREFIX = neg_
+load_col = {'inter': ['user_id', 'item_id', 'timestamp'], 'item': ['item_id', 'item_emb']}
+unload_col = None
+unused_col = None
+additional_feat_suffix = None
+rm_dup_inter = None
+val_interval = None
+filter_inter_by_user_or_item = True
+user_inter_num_interval = [0,inf)
+item_inter_num_interval = [0,inf)
+alias_of_user_id = None
+alias_of_item_id = None
+alias_of_entity_id = None
+alias_of_relation_id = None
+preload_weight = None
+normalize_field = None
+normalize_all = None
+ITEM_LIST_LENGTH_FIELD = item_length
+LIST_SUFFIX = _list
+MAX_ITEM_LIST_LENGTH = 50
+POSITION_FIELD = position_id
+HEAD_ENTITY_ID_FIELD = head_id
+TAIL_ENTITY_ID_FIELD = tail_id
+RELATION_ID_FIELD = relation_id
+ENTITY_ID_FIELD = entity_id
+benchmark_filename = None
+
+Other Hyper Parameters: 
+worker = 0
+wandb_project = recbole
+shuffle = True
+require_pow = False
+enable_amp = False
+enable_scaler = False
+transform = None
+numerical_features = []
+discretization = None
+kg_reverse_r = False
+entity_kg_num_interval = [0,inf)
+relation_kg_num_interval = [0,inf)
+MODEL_TYPE = ModelType.SEQUENTIAL
+model_type = ModelType.SEQUENTIAL
+n_heads = 4
+n_layers = 1
+hidden_size = 64
+inner_size = 256
+neg_sampling = None
+hidden_dropout_prob = 0.5
+attn_dropout_prob = 0.5
+hidden_act = gelu
+layer_norm_eps = 1e-12
+initializer_range = 0.02
+loss_type = WCE
+alpha = 1.2
+beta = 0.99
+logging_level = INFO
+log_console = True
+log_file = True
+log_filename = hypertuning.log
+save_step = 50
+pretrain_epochs = 200
+with_adapter = False
+eval_type = EvaluatorType.RANKING
+single_spec = True
+local_rank = 0
+device = cuda
+valid_neg_sample_args = {'distribution': 'uniform', 'sample_num': 99}
+test_neg_sample_args = {'distribution': 'uniform', 'sample_num': 99}
+
+
+Sat 09 Nov 2024 21:41:22 INFO  us
+The number of users: 35917
+Average actions of users: 10.001837621115937
+The number of items: 31126
+Average actions of items: 11.541397590361445
+The number of inters: 359226
+The sparsity of the dataset: 99.96786750899484%
+Remain Fields: ['user_id', 'item_id', 'timestamp', 'item_emb']
+Sat 09 Nov 2024 21:41:26 INFO  [Training]: train_batch_size = [256] train_neg_sample_args: [{'distribution': 'none', 'sample_num': 'none', 'alpha': 'none', 'dynamic': False, 'candidate_num': 0}]
+Sat 09 Nov 2024 21:41:26 INFO  [Evaluation]: eval_batch_size = [4096] eval_args: [{'split': {'LS': 'valid_and_test'}, 'order': 'TO', 'group_by': 'user', 'mode': {'valid': 'uni99', 'test': 'uni99'}}]
+Sat 09 Nov 2024 21:41:45 INFO  CATSR(
+  (item_embedding): Embedding(31126, 768)
+  (position_embedding): Embedding(50, 768)
+  (trm_encoder): TransformerSingleEncoder(
+    (layer): TransformerSingleLayer(
+      (multi_head_attention): MultiHeadAttentionSingleLayer(
+        (query): Linear(in_features=768, out_features=768, bias=True)
+        (key): Linear(in_features=768, out_features=768, bias=True)
+        (value): Linear(in_features=768, out_features=768, bias=True)
+        (softmax): Softmax(dim=-1)
+        (attn_dropout): Dropout(p=0.5, inplace=False)
+        (dense): Linear(in_features=768, out_features=768, bias=True)
+        (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+        (out_dropout): Dropout(p=0.5, inplace=False)
+      )
+      (feed_forward): FeedForward(
+        (dense_1): Linear(in_features=768, out_features=256, bias=True)
+        (dense_2): Linear(in_features=256, out_features=768, bias=True)
+        (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+        (dropout): Dropout(p=0.5, inplace=False)
+      )
+    )
+  )
+  (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+  (dropout): Dropout(p=0.5, inplace=False)
+)
+Trainable parameters: 2799616
+Sat 09 Nov 2024 21:42:05 INFO  epoch 0 training [time: 20.54s, train loss: 11735.2894]
+Sat 09 Nov 2024 21:42:23 INFO  epoch 1 training [time: 17.81s, train loss: 9681.1997]
+Sat 09 Nov 2024 21:42:41 INFO  epoch 2 training [time: 18.21s, train loss: 9609.0234]
+Sat 09 Nov 2024 21:43:00 INFO  epoch 3 training [time: 19.03s, train loss: 9570.0396]
+Sat 09 Nov 2024 21:43:20 INFO  epoch 4 training [time: 19.52s, train loss: 9542.0857]
+Sat 09 Nov 2024 21:43:38 INFO  epoch 5 training [time: 18.35s, train loss: 9518.7615]
+Sat 09 Nov 2024 21:43:56 INFO  epoch 6 training [time: 17.76s, train loss: 9501.3760]
+Sat 09 Nov 2024 21:44:13 INFO  epoch 7 training [time: 17.64s, train loss: 9489.8044]
+Sat 09 Nov 2024 21:44:32 INFO  epoch 8 training [time: 18.13s, train loss: 9480.2931]
+Sat 09 Nov 2024 21:44:51 INFO  epoch 9 training [time: 19.30s, train loss: 9470.3755]
+Sat 09 Nov 2024 21:45:09 INFO  epoch 10 training [time: 18.13s, train loss: 9458.1310]
+Sat 09 Nov 2024 21:45:27 INFO  epoch 11 training [time: 17.70s, train loss: 9452.7800]
+Sat 09 Nov 2024 21:45:45 INFO  epoch 12 training [time: 18.23s, train loss: 9447.6308]
+Sat 09 Nov 2024 21:46:03 INFO  epoch 13 training [time: 18.47s, train loss: 9440.8041]
+Sat 09 Nov 2024 21:46:22 INFO  epoch 14 training [time: 18.24s, train loss: 9436.3496]
+Sat 09 Nov 2024 21:46:41 INFO  epoch 15 training [time: 19.60s, train loss: 9430.1119]
+Sat 09 Nov 2024 21:47:00 INFO  epoch 16 training [time: 18.93s, train loss: 9425.7839]
+Sat 09 Nov 2024 21:47:18 INFO  epoch 17 training [time: 18.16s, train loss: 9418.8637]
+Sat 09 Nov 2024 21:47:37 INFO  epoch 18 training [time: 18.81s, train loss: 9414.9560]
+Sat 09 Nov 2024 21:47:56 INFO  epoch 19 training [time: 19.14s, train loss: 9408.6803]
+Sat 09 Nov 2024 21:48:14 INFO  epoch 20 training [time: 17.66s, train loss: 9403.1019]
+Sat 09 Nov 2024 21:48:32 INFO  epoch 21 training [time: 18.43s, train loss: 9401.2595]
+Sat 09 Nov 2024 21:48:52 INFO  epoch 22 training [time: 19.36s, train loss: 9397.8729]
+Sat 09 Nov 2024 21:49:11 INFO  epoch 23 training [time: 19.30s, train loss: 9393.7689]
+Sat 09 Nov 2024 21:49:30 INFO  epoch 24 training [time: 18.82s, train loss: 9390.3303]
+Sat 09 Nov 2024 21:49:48 INFO  epoch 25 training [time: 17.76s, train loss: 9388.3979]
+Sat 09 Nov 2024 21:50:05 INFO  epoch 26 training [time: 17.54s, train loss: 9382.6388]
+Sat 09 Nov 2024 21:50:23 INFO  epoch 27 training [time: 17.49s, train loss: 9382.2005]
+Sat 09 Nov 2024 21:50:41 INFO  epoch 28 training [time: 18.87s, train loss: 9378.7696]
+Sat 09 Nov 2024 21:51:00 INFO  epoch 29 training [time: 18.77s, train loss: 9377.4527]
+Sat 09 Nov 2024 21:51:18 INFO  epoch 30 training [time: 17.63s, train loss: 9374.3653]
+Sat 09 Nov 2024 21:51:36 INFO  epoch 31 training [time: 17.65s, train loss: 9372.4929]
+Sat 09 Nov 2024 21:51:53 INFO  epoch 32 training [time: 17.69s, train loss: 9371.4910]
+Sat 09 Nov 2024 21:52:11 INFO  epoch 33 training [time: 17.47s, train loss: 9367.8778]
+Sat 09 Nov 2024 21:52:29 INFO  epoch 34 training [time: 18.05s, train loss: 9367.9497]
+Sat 09 Nov 2024 21:52:48 INFO  epoch 35 training [time: 19.50s, train loss: 9364.4053]
+Sat 09 Nov 2024 21:53:06 INFO  epoch 36 training [time: 18.09s, train loss: 9362.9179]
+Sat 09 Nov 2024 21:53:24 INFO  epoch 37 training [time: 17.53s, train loss: 9358.9290]
+Sat 09 Nov 2024 21:53:43 INFO  epoch 38 training [time: 18.90s, train loss: 9358.5380]
+Sat 09 Nov 2024 21:54:01 INFO  epoch 39 training [time: 18.34s, train loss: 9357.6098]
+Sat 09 Nov 2024 21:54:19 INFO  epoch 40 training [time: 17.69s, train loss: 9355.5420]
+Sat 09 Nov 2024 21:54:38 INFO  epoch 41 training [time: 18.89s, train loss: 9356.5023]
+Sat 09 Nov 2024 21:54:57 INFO  epoch 42 training [time: 19.32s, train loss: 9353.5015]
+Sat 09 Nov 2024 21:55:16 INFO  epoch 43 training [time: 19.44s, train loss: 9353.8605]
+Sat 09 Nov 2024 21:55:35 INFO  epoch 44 training [time: 18.16s, train loss: 9349.4906]
+Sat 09 Nov 2024 21:55:52 INFO  epoch 45 training [time: 17.71s, train loss: 9352.4465]
+Sat 09 Nov 2024 21:56:10 INFO  epoch 46 training [time: 17.50s, train loss: 9348.9876]
+Sat 09 Nov 2024 21:56:28 INFO  epoch 47 training [time: 18.16s, train loss: 9350.3778]
+Sat 09 Nov 2024 21:56:47 INFO  epoch 48 training [time: 19.31s, train loss: 9347.8885]
+Sat 09 Nov 2024 21:57:06 INFO  epoch 49 training [time: 18.34s, train loss: 9343.4875]
+Sat 09 Nov 2024 21:57:06 INFO  Saving current: saved/CATSR-us-50.pth
+Sat 09 Nov 2024 21:57:23 INFO  epoch 50 training [time: 17.54s, train loss: 9345.0430]
+Sat 09 Nov 2024 21:57:41 INFO  epoch 51 training [time: 17.56s, train loss: 9345.2563]
+Sat 09 Nov 2024 21:57:58 INFO  epoch 52 training [time: 17.57s, train loss: 9343.2882]
+Sat 09 Nov 2024 21:58:16 INFO  epoch 53 training [time: 17.44s, train loss: 9342.1306]
+Sat 09 Nov 2024 21:58:35 INFO  epoch 54 training [time: 18.66s, train loss: 9342.6863]
+Sat 09 Nov 2024 21:58:54 INFO  epoch 55 training [time: 19.32s, train loss: 9341.8038]
+Sat 09 Nov 2024 21:59:11 INFO  epoch 56 training [time: 17.53s, train loss: 9339.1824]
+Sat 09 Nov 2024 21:59:29 INFO  epoch 57 training [time: 17.84s, train loss: 9339.9832]
+Sat 09 Nov 2024 21:59:48 INFO  epoch 58 training [time: 18.76s, train loss: 9337.7127]
+Sat 09 Nov 2024 22:00:06 INFO  epoch 59 training [time: 17.76s, train loss: 9339.5976]
+Sat 09 Nov 2024 22:00:23 INFO  epoch 60 training [time: 17.44s, train loss: 9341.4438]
+Sat 09 Nov 2024 22:00:42 INFO  epoch 61 training [time: 19.12s, train loss: 9333.7746]
+Sat 09 Nov 2024 22:01:02 INFO  epoch 62 training [time: 19.19s, train loss: 9334.6979]
+Sat 09 Nov 2024 22:01:21 INFO  epoch 63 training [time: 19.34s, train loss: 9334.0100]
+Sat 09 Nov 2024 22:01:39 INFO  epoch 64 training [time: 17.89s, train loss: 9334.3266]
+Sat 09 Nov 2024 22:01:56 INFO  epoch 65 training [time: 17.64s, train loss: 9332.5342]
+Sat 09 Nov 2024 22:02:14 INFO  epoch 66 training [time: 17.50s, train loss: 9334.1496]
+Sat 09 Nov 2024 22:02:32 INFO  epoch 67 training [time: 18.19s, train loss: 9333.4463]
+Sat 09 Nov 2024 22:02:51 INFO  epoch 68 training [time: 19.20s, train loss: 9331.9885]
+Sat 09 Nov 2024 22:03:09 INFO  epoch 69 training [time: 17.80s, train loss: 9331.3786]
+Sat 09 Nov 2024 22:03:27 INFO  epoch 70 training [time: 17.64s, train loss: 9331.3764]
+Sat 09 Nov 2024 22:03:44 INFO  epoch 71 training [time: 17.64s, train loss: 9332.4373]
+Sat 09 Nov 2024 22:04:02 INFO  epoch 72 training [time: 17.50s, train loss: 9329.9110]
+Sat 09 Nov 2024 22:04:19 INFO  epoch 73 training [time: 17.43s, train loss: 9331.1073]
+Sat 09 Nov 2024 22:04:38 INFO  epoch 74 training [time: 18.94s, train loss: 9331.0089]
+Sat 09 Nov 2024 22:04:58 INFO  epoch 75 training [time: 19.28s, train loss: 9327.4070]
+Sat 09 Nov 2024 22:05:15 INFO  epoch 76 training [time: 17.52s, train loss: 9330.1314]
+Sat 09 Nov 2024 22:05:33 INFO  epoch 77 training [time: 18.28s, train loss: 9328.2243]
+Sat 09 Nov 2024 22:05:52 INFO  epoch 78 training [time: 18.91s, train loss: 9326.8590]
+Sat 09 Nov 2024 22:06:10 INFO  epoch 79 training [time: 17.59s, train loss: 9329.8417]
+Sat 09 Nov 2024 22:06:28 INFO  epoch 80 training [time: 17.73s, train loss: 9328.5950]
+Sat 09 Nov 2024 22:06:47 INFO  epoch 81 training [time: 19.32s, train loss: 9326.6141]
+Sat 09 Nov 2024 22:07:06 INFO  epoch 82 training [time: 19.39s, train loss: 9325.3286]
+Sat 09 Nov 2024 22:07:26 INFO  epoch 83 training [time: 19.33s, train loss: 9327.8163]
+Sat 09 Nov 2024 22:07:43 INFO  epoch 84 training [time: 17.65s, train loss: 9327.8755]
+Sat 09 Nov 2024 22:08:01 INFO  epoch 85 training [time: 17.55s, train loss: 9326.2713]
+Sat 09 Nov 2024 22:08:18 INFO  epoch 86 training [time: 17.45s, train loss: 9328.0786]
+Sat 09 Nov 2024 22:08:37 INFO  epoch 87 training [time: 18.73s, train loss: 9323.5459]
+Sat 09 Nov 2024 22:08:56 INFO  epoch 88 training [time: 19.16s, train loss: 9327.1412]
+Sat 09 Nov 2024 22:09:14 INFO  epoch 89 training [time: 17.61s, train loss: 9321.3345]
+Sat 09 Nov 2024 22:09:32 INFO  epoch 90 training [time: 17.89s, train loss: 9324.6239]
+Sat 09 Nov 2024 22:09:49 INFO  epoch 91 training [time: 17.61s, train loss: 9323.9818]
+Sat 09 Nov 2024 22:10:07 INFO  epoch 92 training [time: 17.51s, train loss: 9325.5728]
+Sat 09 Nov 2024 22:10:24 INFO  epoch 93 training [time: 17.47s, train loss: 9324.2276]
+Sat 09 Nov 2024 22:10:44 INFO  epoch 94 training [time: 19.29s, train loss: 9324.6549]
+Sat 09 Nov 2024 22:11:02 INFO  epoch 95 training [time: 18.64s, train loss: 9322.2187]
+Sat 09 Nov 2024 22:11:20 INFO  epoch 96 training [time: 17.63s, train loss: 9323.5241]
+Sat 09 Nov 2024 22:11:38 INFO  epoch 97 training [time: 18.58s, train loss: 9320.7492]
+Sat 09 Nov 2024 22:11:57 INFO  epoch 98 training [time: 18.79s, train loss: 9321.7169]
+Sat 09 Nov 2024 22:12:15 INFO  epoch 99 training [time: 17.45s, train loss: 9325.6159]
+Sat 09 Nov 2024 22:12:15 INFO  Saving current: saved/CATSR-us-100.pth
+Sat 09 Nov 2024 22:12:33 INFO  epoch 100 training [time: 18.18s, train loss: 9322.8635]
+Sat 09 Nov 2024 22:12:52 INFO  epoch 101 training [time: 19.35s, train loss: 9320.7998]
+Sat 09 Nov 2024 22:13:12 INFO  epoch 102 training [time: 19.21s, train loss: 9324.8540]
+Sat 09 Nov 2024 22:13:30 INFO  epoch 103 training [time: 18.91s, train loss: 9321.2673]
+Sat 09 Nov 2024 22:13:48 INFO  epoch 104 training [time: 17.65s, train loss: 9320.5012]
+Sat 09 Nov 2024 22:14:06 INFO  epoch 105 training [time: 17.57s, train loss: 9322.0054]
+Sat 09 Nov 2024 22:14:23 INFO  epoch 106 training [time: 17.48s, train loss: 9320.1887]
+Sat 09 Nov 2024 22:14:42 INFO  epoch 107 training [time: 19.25s, train loss: 9319.8187]
+Sat 09 Nov 2024 22:15:01 INFO  epoch 108 training [time: 18.75s, train loss: 9318.8295]
+Sat 09 Nov 2024 22:15:19 INFO  epoch 109 training [time: 17.53s, train loss: 9320.2179]
+Sat 09 Nov 2024 22:15:37 INFO  epoch 110 training [time: 17.84s, train loss: 9320.6028]
+Sat 09 Nov 2024 22:15:54 INFO  epoch 111 training [time: 17.71s, train loss: 9319.9651]
+Sat 09 Nov 2024 22:16:12 INFO  epoch 112 training [time: 17.49s, train loss: 9315.5081]
+Sat 09 Nov 2024 22:16:30 INFO  epoch 113 training [time: 17.89s, train loss: 9317.9931]
+Sat 09 Nov 2024 22:16:49 INFO  epoch 114 training [time: 19.55s, train loss: 9323.2034]
+Sat 09 Nov 2024 22:17:07 INFO  epoch 115 training [time: 18.12s, train loss: 9323.2001]
+Sat 09 Nov 2024 22:17:25 INFO  epoch 116 training [time: 17.61s, train loss: 9319.0710]
+Sat 09 Nov 2024 22:17:44 INFO  epoch 117 training [time: 18.95s, train loss: 9320.2264]
+Sat 09 Nov 2024 22:18:02 INFO  epoch 118 training [time: 18.48s, train loss: 9318.5479]
+Sat 09 Nov 2024 22:18:20 INFO  epoch 119 training [time: 17.44s, train loss: 9321.1987]
+Sat 09 Nov 2024 22:18:39 INFO  epoch 120 training [time: 18.93s, train loss: 9322.4655]
+Sat 09 Nov 2024 22:18:58 INFO  epoch 121 training [time: 19.62s, train loss: 9320.3002]
+Sat 09 Nov 2024 22:19:18 INFO  epoch 122 training [time: 19.55s, train loss: 9321.1660]
+Sat 09 Nov 2024 22:19:36 INFO  epoch 123 training [time: 18.40s, train loss: 9320.2425]
+Sat 09 Nov 2024 22:19:54 INFO  epoch 124 training [time: 17.68s, train loss: 9322.3441]
+Sat 09 Nov 2024 22:20:12 INFO  epoch 125 training [time: 17.60s, train loss: 9322.7672]
+Sat 09 Nov 2024 22:20:30 INFO  epoch 126 training [time: 18.53s, train loss: 9320.8893]
+Sat 09 Nov 2024 22:20:49 INFO  epoch 127 training [time: 19.08s, train loss: 9323.5957]
+Sat 09 Nov 2024 22:21:07 INFO  epoch 128 training [time: 18.11s, train loss: 9320.1647]
+Sat 09 Nov 2024 22:21:25 INFO  epoch 129 training [time: 17.69s, train loss: 9320.2108]
+Sat 09 Nov 2024 22:21:43 INFO  epoch 130 training [time: 17.72s, train loss: 9318.0837]
+Sat 09 Nov 2024 22:22:00 INFO  epoch 131 training [time: 17.61s, train loss: 9321.8002]
+Sat 09 Nov 2024 22:22:18 INFO  epoch 132 training [time: 17.59s, train loss: 9318.0577]
+Sat 09 Nov 2024 22:22:37 INFO  epoch 133 training [time: 18.76s, train loss: 9316.9425]
+Sat 09 Nov 2024 22:22:56 INFO  epoch 134 training [time: 19.56s, train loss: 9320.6645]
+Sat 09 Nov 2024 22:23:14 INFO  epoch 135 training [time: 17.65s, train loss: 9320.8456]
+Sat 09 Nov 2024 22:23:32 INFO  epoch 136 training [time: 18.17s, train loss: 9322.3798]
+Sat 09 Nov 2024 22:23:51 INFO  epoch 137 training [time: 19.25s, train loss: 9317.7351]
+Sat 09 Nov 2024 22:24:09 INFO  epoch 138 training [time: 18.18s, train loss: 9320.3494]
+Sat 09 Nov 2024 22:24:27 INFO  epoch 139 training [time: 17.59s, train loss: 9318.2197]
+Sat 09 Nov 2024 22:24:46 INFO  epoch 140 training [time: 18.88s, train loss: 9318.1055]
+Sat 09 Nov 2024 22:25:05 INFO  epoch 141 training [time: 19.18s, train loss: 9318.8184]
+Sat 09 Nov 2024 22:25:24 INFO  epoch 142 training [time: 19.23s, train loss: 9318.5789]
+Sat 09 Nov 2024 22:25:42 INFO  epoch 143 training [time: 17.72s, train loss: 9324.0008]
+Sat 09 Nov 2024 22:26:00 INFO  epoch 144 training [time: 17.68s, train loss: 9323.1771]
+Sat 09 Nov 2024 22:26:17 INFO  epoch 145 training [time: 17.57s, train loss: 9318.2651]
+Sat 09 Nov 2024 22:26:36 INFO  epoch 146 training [time: 18.32s, train loss: 9318.7555]
+Sat 09 Nov 2024 22:26:55 INFO  epoch 147 training [time: 19.06s, train loss: 9318.5026]
+Sat 09 Nov 2024 22:27:12 INFO  epoch 148 training [time: 17.68s, train loss: 9316.6946]
+Sat 09 Nov 2024 22:27:30 INFO  epoch 149 training [time: 17.58s, train loss: 9318.9846]
+Sat 09 Nov 2024 22:27:30 INFO  Saving current: saved/CATSR-us-150.pth
+Sat 09 Nov 2024 22:27:48 INFO  epoch 150 training [time: 17.70s, train loss: 9320.3695]
+Sat 09 Nov 2024 22:28:05 INFO  epoch 151 training [time: 17.61s, train loss: 9317.7414]
+Sat 09 Nov 2024 22:28:23 INFO  epoch 152 training [time: 17.55s, train loss: 9317.2398]
+Sat 09 Nov 2024 22:28:42 INFO  epoch 153 training [time: 19.30s, train loss: 9319.8449]
+Sat 09 Nov 2024 22:29:01 INFO  epoch 154 training [time: 18.88s, train loss: 9317.7681]
+Sat 09 Nov 2024 22:29:19 INFO  epoch 155 training [time: 17.68s, train loss: 9319.2802]
+Sat 09 Nov 2024 22:29:37 INFO  epoch 156 training [time: 18.61s, train loss: 9319.1035]
+Sat 09 Nov 2024 22:29:56 INFO  epoch 157 training [time: 18.99s, train loss: 9318.8884]
+Sat 09 Nov 2024 22:30:14 INFO  epoch 158 training [time: 17.57s, train loss: 9320.0798]
+Sat 09 Nov 2024 22:30:32 INFO  epoch 159 training [time: 18.14s, train loss: 9318.7344]
+Sat 09 Nov 2024 22:30:51 INFO  epoch 160 training [time: 19.25s, train loss: 9318.9169]
+Sat 09 Nov 2024 22:31:11 INFO  epoch 161 training [time: 19.29s, train loss: 9319.1221]
+Sat 09 Nov 2024 22:31:30 INFO  epoch 162 training [time: 18.91s, train loss: 9321.4201]
+Sat 09 Nov 2024 22:31:47 INFO  epoch 163 training [time: 17.64s, train loss: 9320.0716]
+Sat 09 Nov 2024 22:32:05 INFO  epoch 164 training [time: 17.55s, train loss: 9317.9464]
+Sat 09 Nov 2024 22:32:22 INFO  epoch 165 training [time: 17.48s, train loss: 9318.1415]
+Sat 09 Nov 2024 22:32:41 INFO  epoch 166 training [time: 19.02s, train loss: 9320.2447]
+Sat 09 Nov 2024 22:33:00 INFO  epoch 167 training [time: 18.89s, train loss: 9318.4316]
+Sat 09 Nov 2024 22:33:18 INFO  epoch 168 training [time: 17.72s, train loss: 9321.1341]
+Sat 09 Nov 2024 22:33:35 INFO  epoch 169 training [time: 17.52s, train loss: 9321.6707]
+Sat 09 Nov 2024 22:33:53 INFO  epoch 170 training [time: 17.60s, train loss: 9318.5916]
+Sat 09 Nov 2024 22:34:11 INFO  epoch 171 training [time: 17.60s, train loss: 9321.3849]
+Sat 09 Nov 2024 22:34:28 INFO  epoch 172 training [time: 17.90s, train loss: 9316.7836]
+Sat 09 Nov 2024 22:34:48 INFO  epoch 173 training [time: 19.29s, train loss: 9317.9257]
+Sat 09 Nov 2024 22:35:06 INFO  epoch 174 training [time: 18.36s, train loss: 9317.9984]
+Sat 09 Nov 2024 22:35:24 INFO  epoch 175 training [time: 17.61s, train loss: 9317.4951]
+Sat 09 Nov 2024 22:35:43 INFO  epoch 176 training [time: 18.86s, train loss: 9320.5877]
+Sat 09 Nov 2024 22:36:01 INFO  epoch 177 training [time: 18.46s, train loss: 9318.9523]
+Sat 09 Nov 2024 22:36:19 INFO  epoch 178 training [time: 17.55s, train loss: 9319.5146]
+Sat 09 Nov 2024 22:36:37 INFO  epoch 179 training [time: 18.46s, train loss: 9317.5144]
+Sat 09 Nov 2024 22:36:56 INFO  epoch 180 training [time: 19.19s, train loss: 9317.7512]
+Sat 09 Nov 2024 22:37:16 INFO  epoch 181 training [time: 19.30s, train loss: 9317.4898]
+Sat 09 Nov 2024 22:37:34 INFO  epoch 182 training [time: 18.41s, train loss: 9317.9157]
+Sat 09 Nov 2024 22:37:52 INFO  epoch 183 training [time: 17.64s, train loss: 9316.9906]
+Sat 09 Nov 2024 22:38:09 INFO  epoch 184 training [time: 17.54s, train loss: 9318.0481]
+Sat 09 Nov 2024 22:38:27 INFO  epoch 185 training [time: 17.74s, train loss: 9322.6650]
+Sat 09 Nov 2024 22:38:46 INFO  epoch 186 training [time: 19.03s, train loss: 9316.9937]
+Sat 09 Nov 2024 22:39:04 INFO  epoch 187 training [time: 18.39s, train loss: 9315.2913]
+Sat 09 Nov 2024 22:39:22 INFO  epoch 188 training [time: 17.57s, train loss: 9318.4663]
+Sat 09 Nov 2024 22:39:40 INFO  epoch 189 training [time: 17.82s, train loss: 9319.1970]
+Sat 09 Nov 2024 22:39:57 INFO  epoch 190 training [time: 17.66s, train loss: 9320.7247]
+Sat 09 Nov 2024 22:40:15 INFO  epoch 191 training [time: 17.55s, train loss: 9320.2718]
+Sat 09 Nov 2024 22:40:33 INFO  epoch 192 training [time: 18.16s, train loss: 9319.9105]
+Sat 09 Nov 2024 22:40:53 INFO  epoch 193 training [time: 19.59s, train loss: 9317.0687]
+Sat 09 Nov 2024 22:41:10 INFO  epoch 194 training [time: 17.82s, train loss: 9321.3353]
+Sat 09 Nov 2024 22:41:28 INFO  epoch 195 training [time: 17.80s, train loss: 9318.4491]
+Sat 09 Nov 2024 22:41:47 INFO  epoch 196 training [time: 19.02s, train loss: 9318.3530]
+Sat 09 Nov 2024 22:42:05 INFO  epoch 197 training [time: 18.17s, train loss: 9322.3960]
+Sat 09 Nov 2024 22:42:23 INFO  epoch 198 training [time: 17.51s, train loss: 9319.7420]
+Sat 09 Nov 2024 22:42:42 INFO  epoch 199 training [time: 18.98s, train loss: 9318.6045]
+Sat 09 Nov 2024 22:42:42 INFO  Saving current: saved/CATSR-us-200.pth
