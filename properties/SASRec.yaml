@@ -1,0 +1,33 @@
+# python run_recbole.py --model=SASRec --dataset=ca --config_file_list=['properties/SASRec.yaml', 'properties/market.yaml']
+#'/Users/yujieling/opt/anaconda3/lib/python3.9/site-packages/recbole/config/../properties/model/CATSR.yaml'
+#   model config
+model_name: SASRec
+# MODEL_TYPE: ModelType.SEQUENTIAL
+#n_heads: 4
+#n_layers: 1
+#hidden_size: 64
+#inner_size: 256
+#eval_step : 10
+
+neg_sampling: ~
+train_neg_sample_args: ~
+#hidden_dropout_prob: 0.5
+#attn_dropout_prob: 0.5
+#hidden_act: gelu
+#layer_norm_eps: 1e-12
+#initializer_range: 0.02
+train_batch_size: 256
+
+loss_type: CE
+fix: True
+use_bert: True
+stopping_step: 10
+eval_args:
+   split: {'LS': 'valid_and_test'}
+   group_by: user
+   order: TO
+   mode: uni99
+metrics: ['MRR', 'Hit','NDCG']
+topk: [10]
+valid_metric: NDCG@10
+valid_metric_bigger: True

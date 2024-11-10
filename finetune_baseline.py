@@ -68,7 +68,6 @@ if __name__ == '__main__':
     else:
         config_file_list = [f'properties/{model_name}.yaml'] + ['properties/market.yaml']
         config = Config(model=model_name, config_dict=config_dict, config_file_list=config_file_list)
-    # config = Config(model=CATSR, config_dict=config_dict, config_file_list=['properties/CATSR.yaml', 'properties/market.yaml'])
 
     weight_list = ["query", "key"]
     
@@ -76,8 +75,6 @@ if __name__ == '__main__':
     #     weight_path = f'saved/{model_name}-bert-us-200.pth'
     # else:
     weight_path = f'saved/{model_name}-us-200.pth'
-    # if model_name=='UniSRec':
-    #     weight_path='saved/UniSRec-FHCKM-300.pth'
     # init random seed
     init_seed(config['seed'], config['reproducibility'])
 
@@ -94,7 +91,6 @@ if __name__ == '__main__':
         dataset = UniSRecDataset(config)
     else:
         dataset = create_dataset(config)
-    # dataset = create_dataset(config)
     logger.info(dataset)
     
     # dataset splitting
@@ -106,8 +102,8 @@ if __name__ == '__main__':
         model = CATSR(config, train_data.dataset, weight_dict).to(config['device'])
     elif config['model_name'] == "SASRec":
         from SASRec import SASRec
-        # weight_dict = load_param(weight_path, weight_list)
-        model = SASRec(config, train_data.dataset).to(config['device'])
+        weight_dict = load_param(weight_path, weight_list)
+        model = SASRec(config, train_data.dataset,weight_list).to(config['device'])
     elif config['model_name'] == "S3Rec":
         from S3Rec import S3Rec
         model = S3Rec(config, train_data.dataset).to(config['device'])

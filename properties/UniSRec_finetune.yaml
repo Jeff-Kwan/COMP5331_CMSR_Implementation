@@ -1,0 +1,18 @@
+data_path: 'data/downstream/'
+benchmark_filename: [train, valid, test]
+alias_of_item_id: [item_id_list]
+load_col:
+  inter: [user_id, item_id_list, item_id]
+train_neg_sample_args: ~
+unisrec_transform: ~
+
+# eval_args:
+#    split: {'LS': 'valid_and_test'}
+#    group_by: user
+#    order: TO
+#    mode: uni99
+topk: [10, 20]
+metrics: [MRR, HIT, NDCG]
+valid_metric: MRR@10
+eval_batch_size: 1024
+stopping_step: 10
