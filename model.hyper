@@ -1,4 +1,4 @@
-alpha uniform 0.5,2.0
-beta uniform 0.5,1.5
-loss_type choice ['CE', 'WCE']
+alpha choice [1.0,1.2,1.4,2.0]
+beta choice [0.5,1.0,1.5]
+loss_type choice ["CE","WCE"]
 model ['CATSR']
