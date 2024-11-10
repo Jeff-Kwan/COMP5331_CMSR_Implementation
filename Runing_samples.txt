@@ -1,0 +1,17 @@
+For data process of S3Rec/SASRec/CATSR:
+
+
+For SASRec and S3Rec (Single market):
+1. Adjust the model_name [option:SASRec,S3Rec,UniSRec] and the dataset[option:de,jp,...] in finetune.sh
+2. Run:  bash finetune.sh
+
+For SASRec-bert and UniSRec-bert:
+Pretrain:
+1. Adjust the model_name  and the dataset in pretrain_dist.sh for distrubuted training
+2. Run: bash pretrain_dist.sh   (for distrubuted training)
+Or 
+1. Run python pretrain.py --model_name=UniSRec  (for single gpu training)
+
+Finetune:
+Adjust the model_name [option:SASRec,UniSRec] and the dataset[option:de,jp,...] in finetune.sh
+bash finetune.sh
