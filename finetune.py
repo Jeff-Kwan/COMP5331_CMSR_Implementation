@@ -15,36 +15,52 @@ import functools
 
 
 def objective_function(config_dict=None, config_file_list=None, fixed_config_dict=None):
+    # 合并固定参数和超参数
     if fixed_config_dict is not None:
         if config_dict is None:
             config_dict = fixed_config_dict
         else:
             config_dict.update(fixed_config_dict)
 
+    # 创建配置
     config = Config(model=CATSR, config_dict=config_dict, config_file_list=config_file_list)
 
+    # 初始化随机种子和日志
     init_seed(config['seed'], config['reproducibility'])
     init_logger(config)
     logger = getLogger()
     logger.info('Starting a new trial with parameters: {}'.format(config_dict))
 
+    # 加载预训练权重
     weight_list = ["query", "key"]
     weight_path = config['weight_path']
     weight_dict = load_param(weight_path, weight_list)
 
+    # 创建数据集
     dataset = create_dataset(config)
     train_data, valid_data, test_data = data_preparation(config, dataset)
 
+    # 初始化模型
     model = CATSR(config, train_data.dataset, weight_dict).to(config['device'])
     logger.info(model)
+    # 记录训练开始
     logger.info('Training started.')
 
+    # 记录验证结果
+
+
+    # 记录测试结果
+
+
+    # 训练模型
     trainer = Trainer(config, model)
     best_valid_score, best_valid_result = trainer.fit(train_data, valid_data, show_progress=False)
     logger.info('Validation result: {}'.format(best_valid_result))
 
+    # 测试模型
     test_result = trainer.evaluate(test_data)
     logger.info('Test result: {}'.format(test_result))
+    # 返回结果
     return {
         'best_valid_score': best_valid_score,
         'valid_score_bigger': config['valid_metric_bigger'],
@@ -90,19 +106,26 @@ if __name__ == '__main__':
     parser.add_argument('--tool', type=str, default='Hyperopt', choices=['Hyperopt', 'Ray'], help='选择调优工具')
     args, _ = parser.parse_known_args()
 
+    # 定义固定的参数字典
     fixed_config_dict = {'weight_path': args.weight_path}
 
+    # 固定配置文件列表
     config_file_list = args.config_files.strip().split(' ')
 
+    # 创建带有固定参数的部分函数
     objective_function = functools.partial(objective_function, fixed_config_dict=fixed_config_dict)
 
+    # 初始化 HyperTuning 实例（移除 config_dict 参数）
     hp = HyperTuning(objective_function=objective_function, algo='exhaustive',
                      params_file=args.params_file, fixed_config_file_list=config_file_list)
 
+    # 运行超参数调优
     hp.run()
 
+    # 导出结果
     hp.export_result(output_file=args.output_file)
 
+    # 打印最佳参数和结果
     print('best params: ', hp.best_params)
     print('best result: ')
     print(hp.params2result[hp.params2str(hp.best_params)])
