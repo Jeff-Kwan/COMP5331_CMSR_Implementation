@@ -6,7 +6,6 @@ from recbole.trainer.trainer import PretrainTrainer
 from recbole.utils import init_seed, init_logger
 from CATSR import CATSR
 
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--alpha', default=1.2, type=float, help='alpha in WCE')
@@ -16,22 +15,23 @@ if __name__ == '__main__':
     parser.add_argument('--gpu_id', default=0, type=int)
     parser.add_argument('--pretrain_epochs', default=200, type=int, help='pretrain epochs')
     parser.add_argument('--save_step', default=50, type=int, help='save step')
+    parser.add_argument('--seed', default=3407, type=int, help='random seed for reproducibility')  # 添加seed参数
     args = parser.parse_args()
-    
-    
+
     config_dict = {}
-    config_dict['alpha'] = args.alpha # 1.2 1.4 1.6
-    config_dict['beta'] = args.beta # 0.5 1.0 1.5
+    config_dict['alpha'] = args.alpha  # 1.2 1.4 1.6
+    config_dict['beta'] = args.beta  # 0.5 1.0 1.5
     config_dict['loss_type'] = args.loss_type
     config_dict['dataset'] = args.dataset
     config_dict['gpu_id'] = args.gpu_id
     config_dict['save_step'] = args.save_step
     config_dict['pretrain_epochs'] = args.pretrain_epochs
     config_dict['checkpoint_dir'] = "saved/"
-    config_dict['with_adapter'] = False # pretrian do not need adapter
-    
+    config_dict['with_adapter'] = False  # pretrian do not need adapter
+
     # configurations initialization
-    config = Config(model=CATSR, config_dict=config_dict, config_file_list=['properties/CATSR.yaml', 'properties/market.yaml'])
+    config = Config(model=CATSR, config_dict=config_dict,
+                    config_file_list=['properties/CATSR.yaml', 'properties/market.yaml'])
 
     # init random seed
     init_seed(config['seed'], config['reproducibility'])
@@ -46,13 +46,13 @@ if __name__ == '__main__':
     # dataset creating and filtering
     dataset = create_dataset(config)
     logger.info(dataset)
-    
+
     # dataset splitting
     train_data, valid_data, test_data = data_preparation(config, dataset)
 
     model = CATSR(config, train_data.dataset).to(config['device'])
     logger.info(model)
-    
+
     # trainer loading and initialization
     trainer = PretrainTrainer(config, model)
     trainer.pretrain(train_data, show_progress=False)
