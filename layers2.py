@@ -22,9 +22,11 @@ class MLP(nn.Module):
     def __init__(self, in_dim, out_dim, dropout=0.0, activation="relu", bn=False):
         super(MLP, self).__init__()
         self.layers = nn.Sequential(
-            nn.Linear(in_dim, out_dim * 4, bias=None),
-            get_activation(activation),
-            nn.Linear(out_dim * 4, out_dim, bias=None))
+             nn.Linear(in_dim, out_dim * 4, bias=None),
+             get_activation(activation),
+             nn.Linear(out_dim * 4, out_dim, bias=None))
+
+        self.layers = nn.Linear(in_dim, out_dim, bias=None)
 
     def forward(self, x):
         return self.layers(x)
@@ -51,6 +53,9 @@ class MultiHeadAttention(nn.Module):
         if with_mlp:
             self.mlp_query = MLP(hidden_size, hidden_size, bn=False)
             self.mlp_key = MLP(hidden_size, hidden_size, bn=False)
+
+            self.mlp_query = nn.Linear(hidden_size, hidden_size, bias=None)
+            self.mlp_key = nn.Linear(hidden_size, hidden_size, bias=None)
         else:
             self.mlp_query = nn.Identity()
             self.mlp_key = nn.Identity()
@@ -70,41 +75,29 @@ class MultiHeadAttention(nn.Module):
     def forward(self, x, attn_mask):
         # x: [batch_size, seq_len, hidden_size]
         B, S, D = x.size()
-        print("Input x in MultiHeadAttention:", x.shape)
-
         x = self.RMSNorm(x)
         q = self.query(x)
         k = self.key(x)
         v = self.value(x)
-        print("Q, K, V shapes:", q.shape, k.shape, v.shape)
 
         q = self.mlp_query(q)
         k = self.mlp_key(k)
-        print("Q, K shapes after MLP (if applied):", q.shape, k.shape)
 
         q = q.view(B, S, self.n_heads, self.d).transpose(1, 2)
         k = k.view(B, S, self.n_heads, self.d).transpose(1, 2)
         v = v.view(B, S, self.n_heads, self.d).transpose(1, 2)
-        print("Q, K, V reshaped for attention:", q.shape, k.shape, v.shape)
 
-        attn_scores = torch.matmul(q, k.transpose(-2, -1)) / self.sqrt_d
-        print("Attention scores shape:", attn_scores.shape)
-        attn_probs = self.softmax(attn_scores + attn_mask.unsqueeze(1))  # Apply mask and softmax
-        print("Attention probs shape:", attn_probs.shape)
+        attn_scores = torch.matmul(q, k.transpose(-2, -1)) / self.sqrt_d  # [B, n_heads, S, S]
+        attn_probs = self.softmax(attn_scores + attn_mask)
+        attn_output = torch.matmul(attn_probs, v)  # [B, n_heads, S, d]
 
-        attn_output = torch.matmul(attn_probs, v)
-        print("Attention output before view:", attn_output.shape)
-        attn_output = attn_output[:, -1, :, :, :]  #[256, 4, 50, 192]
+        attn_output = attn_output.permute(0, 2, 1, 3).contiguous()  # [B, S, n_heads, d]
 
-        attn_output = attn_output.permute(0, 2, 1, 3).contiguous()  #[256, 50, 4, 192]
-
-        attn_output = attn_output.view(attn_output.size(0), attn_output.size(1), -1)   #[256, 50, 768]
-        print("Attention output after view:", attn_output.shape)
+        # Merge attention heads
+        attn_output = attn_output.view(attn_output.size(0), attn_output.size(1), -1)  # [B, S, hidden_size]
 
         attn_output = self.out(attn_output)
-        print("Attention output after final projection:", attn_output.shape)
         output = x + attn_output
-        print("Final output from MultiHeadAttention:", output.shape)
         return output
 
 
@@ -124,13 +117,9 @@ class FeedForward(nn.Module):
             self.ffl[2].bias = ffn_dict.get('layer2_bias')
 
     def forward(self, x):
-        print("Input to FeedForward:", x.shape)
         normalized_x = self.norm(x)
-        print("Normalized input to FeedForward:", normalized_x.shape)
         ffl_output = self.ffl(normalized_x)
-        print("Output from feedforward layers:", ffl_output.shape)
         output = x + ffl_output
-        print("Final output from FeedForward:", output.shape)
         return output
 
 
@@ -162,9 +151,6 @@ class TransformerSingleEncoder(nn.Module):
                                                       ffn_dict) for _ in range(n_layers)])
 
     def forward(self, x, attn_mask):
-        print("Input to TransformerSingleEncoder:", x.shape)
-        print("attn mask shape:", attn_mask.shape)
         for i, layer in enumerate(self.layers):
             x = layer(x, attn_mask)
-            print(f"Output after layer {i}:", x.shape)
         return x
