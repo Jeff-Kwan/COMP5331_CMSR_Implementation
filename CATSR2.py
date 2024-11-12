@@ -22,6 +22,7 @@ class CATSR(SequentialRecommender):
         self.n_layers=config['n_layers']
         self.n_heads=config['n_heads']
         self.with_mlp=config['with_adapter']
+        self.ffn_dict=config['ffn']
 
         if weight_dict is not None:
             self.ffn_dict = weight_dict.get('ffn_dict')
@@ -67,7 +68,8 @@ class CATSR(SequentialRecommender):
             q_weight=self.q_weight,
             k_weight=self.k_weight,
             v_weight=self.v_weight,
-            with_mlp=self.with_mlp
+            with_mlp=self.with_mlp,
+            ffn_dict=self.ffn_dict
         )
         self.RMSNorm= nn.RMSNorm(self.hidden_size)
         self.outnorm = nn.RMSNorm(self.hidden_size)
