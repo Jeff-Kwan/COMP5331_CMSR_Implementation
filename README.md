@@ -49,14 +49,14 @@ Pretrain:
     ```
     For Single GPU:
     ```
-    python pretrain.py --model_name=UniSRec
+    python pretrain_baseline.py --model_name=UniSRec
     ```
 
     
 
 ### 5. Fine-tune
 ```
-bash finetune.sh
+bash finetune_baseline.sh
 ```
 ### 6. File discription
 - Directory CDR:
