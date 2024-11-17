@@ -59,10 +59,9 @@ Pretrain:
 bash finetune.sh
 ```
 ### 6. File discription
-- <font color=red >Directory CDR</font>:
+- Directory CDR:
 
 - Directory data:  
-    - <font color=red >data_process_baseline.py</font>  
     - data_process.py:
         The Processing file for generating data files (i.e., .inter, .item) used in CAT-SR, SASRec, and S3Rec.  
     - process_unis_atomic.py:
@@ -88,13 +87,11 @@ bash finetune.sh
     - UnisRec.py:
         The file define the model structure of UniSRec.
 
-- <font color=red >baseline.py:</font>
 
 - finetune_baseline.py:
     The file implement the finetune method for the models in baseline 1.
 - finetune_baseline.sh:
     A shell script file defines the parameters for running finetune.py
-- <font color=red >finetune.py</font>
 
 - pretrain_baseline.py:
     The file implement the pretrain method for the models in baseline 1, only using one gpu.  
@@ -102,8 +99,10 @@ bash finetune.sh
     The file implement the pretrain method for the models in baseline 1, using multiple gpus.  
 - pretrain_dist.sh:
     A shell script file defines the parameters for running pretrain_dist.py.  
-- <font color=red >pretrain.py</font>
-
+- S3Rec.py:
+    The file define the model structure of S3Rec.
+- SASRec.py:
+    The file define the model structure of SASRec.
 
 ### 7. Operating System
     Linux
