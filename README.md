@@ -59,52 +59,51 @@ Pretrain:
 bash finetune.sh
 ```
 ### 6. File discription
-<font color=red >Directory CDR</font>:
+- <font color=red >Directory CDR</font>:
 
-Directory data:
-    data_process_baseline.py:
+- Directory data:  
+    - <font color=red >data_process_baseline.py</font>  
+    - data_process.py:
+        The Processing file for generating data files (i.e., .inter, .item) used in CAT-SR, SASRec, and S3Rec.  
+    - process_unis_atomic.py:
+        The Processing file for generating atomic data files used  in UniSRec.  
+    - UnisRec_data_process.py:
+        The Processing file for generating data files used (i.e., .inter, .item, .feat1CLS etc.) in UniSRec.  
+    - utils.py: 
+        some utils for data_process.py  
 
-    data_process.py:
-        The Processing file for generating data files (i.e., .inter, .item) used in CAT-SR, SASRec, and S3Rec.
-    process_unis_atomic.py:
-        The Processing file for generating atomic data files used  in UniSRec.
-    UnisRec_data_process.py:
-        The Processing file for generating data files used (i.e., .inter, .item, .feat1CLS etc.) in UniSRec.
-    utils.py:
-        some utils for data_process.py
-
-Directory properties:
-    The configuration files for baseline1 have file names with the model name as the prefix and a unified suffix of .yaml.
+- Directory properties:  
+    - The configuration files for baseline1 have file names with the model name as the prefix and a unified suffix of .yaml.  
 
 
-Directory UniSRec_model:
-    config.py:
+- Directory UniSRec_model:
+    - config.py:
         Self-defined Config class for some RecBole configuration.
-    dataloader.py:
+    - dataloader.py:
         Two self-defined dataloader class for UnisRec's dataloader
-    dataset.py:
+    - dataset.py:
         Two self-defined dataset class to adapt to UnisRec model
-    transform.py:
+    - transform.py:
         A File for PLM embedding transform in dataLoader.
-    UnisRec.py:
+    - UnisRec.py:
         The file define the model structure of UniSRec.
 
-<font color=red >baseline.py:</font>
+- <font color=red >baseline.py:</font>
 
-finetune_baseline.py:
+- finetune_baseline.py:
     The file implement the finetune method for the models in baseline 1.
-finetune_baseline.sh:
+- finetune_baseline.sh:
     A shell script file defines the parameters for running finetune.py
-<font color=red >finetune.py</font>
+- <font color=red >finetune.py</font>
 
+- pretrain_baseline.py:
+    The file implement the pretrain method for the models in baseline 1, only using one gpu.  
+- pretrain_dist.py:
+    The file implement the pretrain method for the models in baseline 1, using multiple gpus.  
+- pretrain_dist.sh:
+    A shell script file defines the parameters for running pretrain_dist.py.  
+- <font color=red >pretrain.py</font>
 
-pretrain_baseline.py
-    The file implement the pretrain method for the models in baseline 1, only using one gpu.
-pretrain_dist.py
-    The file implement the pretrain method for the models in baseline 1, using multiple gpus.
-pretrain_dist.sh
-    A shell script file defines the parameters for running pretrain_dist.py
-pretrain.py
 
 ### 7. Operating System
     Linux
