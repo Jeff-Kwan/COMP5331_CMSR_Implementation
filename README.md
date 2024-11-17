@@ -59,7 +59,7 @@ Pretrain:
 bash finetune.sh
 ```
 ### 6. File discription
-Directory CDR:
+<font color=red >Directory CDR</font>:
 
 Directory data:
     data_process_baseline.py:
@@ -89,13 +89,13 @@ Directory UniSRec_model:
     UnisRec.py:
         The file define the model structure of UniSRec.
 
-baseline.py:
+<font color=red >baseline.py:</font>
 
 finetune_baseline.py:
     The file implement the finetune method for the models in baseline 1.
 finetune_baseline.sh:
     A shell script file defines the parameters for running finetune.py
-finetune.py
+<font color=red >finetune.py</font>
 
 
 pretrain_baseline.py
