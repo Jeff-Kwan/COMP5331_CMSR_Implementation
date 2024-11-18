@@ -28,5 +28,8 @@ cd data
 python data_process.py
 
 
+## Pretrain US Market
+python pretrain.py
 
+## Finetune with hypertuning
 finetune: python finetune.py --config_files='properties/CATSR.yaml properties/market.yaml' --params_file='model.hyper' --output_file='hyper_example.result' --weight_path='saved/CATSR-us-200.pth' --tool='Hyperopt' --dataset='us'
