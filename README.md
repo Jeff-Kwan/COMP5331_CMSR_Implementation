@@ -26,10 +26,14 @@ Navigate to the `data` directory and process the dataset:
 ```bash
 cd data
 python data_process.py
-
+```
 
 ## Pretrain US Market
+```bash
 python pretrain.py
+```
 
-## Finetune with hypertuning
-finetune: python finetune.py --config_files='properties/CATSR.yaml properties/market.yaml' --params_file='model.hyper' --output_file='hyper_example.result' --weight_path='saved/CATSR-us-200.pth' --tool='Hyperopt' --dataset='us'
+## Finetune with hypertuning (for example with 'ca')
+```bash
+finetune: python finetune.py --config_files='properties/CATSR.yaml properties/market.yaml' --params_file='model.hyper' --output_file='hyper_example.result' --weight_path='saved/CATSR-us-200.pth' --tool='Hyperopt' --dataset='ca'
+```
