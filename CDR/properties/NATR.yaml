@@ -2,4 +2,4 @@ source_embedding_size: 64
 target_embedding_size: 64
 reg_weight: 1e-3
 max_inter_length: 50
-train_epochs: ["SOURCE:200","TARGET:200"]
+train_epochs: ["SOURCE:100","TARGET:100"]

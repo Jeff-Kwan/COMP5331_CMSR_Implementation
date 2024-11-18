@@ -563,7 +563,7 @@ class CrossDomainDataset:
             return [source_domain_train_dataset, None, target_domain_train_dataset,
                     target_domain_valid_dataset, target_domain_test_dataset]
         else:
-            source_domain_train_dataset, source_domain_valid_dataset = self.source_domain_dataset.split_train_valid()
+            source_domain_train_dataset, source_domain_valid_dataset, source_domain_test_dataset = self.source_domain_dataset.split_train_valid()
             return [source_domain_train_dataset, source_domain_valid_dataset, target_domain_train_dataset,
                     target_domain_valid_dataset, target_domain_test_dataset]
 
