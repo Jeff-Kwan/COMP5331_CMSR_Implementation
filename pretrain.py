@@ -15,7 +15,7 @@ if __name__ == '__main__':
     parser.add_argument('--gpu_id', default=0, type=int)
     parser.add_argument('--pretrain_epochs', default=200, type=int, help='pretrain epochs')
     parser.add_argument('--save_step', default=50, type=int, help='save step')
-    parser.add_argument('--seed', default=3407, type=int, help='random seed for reproducibility')  # 添加seed参数
+    parser.add_argument('--seed', default=3407, type=int, help='random seed for reproducibility')  # set seed as 3407
     args = parser.parse_args()
 
     config_dict = {}
