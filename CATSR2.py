@@ -2,7 +2,7 @@ import torch
 from torch import nn
 from recbole.model.abstract_recommender import SequentialRecommender
 from recbole.model.loss import BPRLoss
-from layers import TransformerSingleEncoder
+from layers2 import TransformerSingleEncoder
 from loss_fct import element_weighted_loss, weight_decay,calculate_item_freq
 
 class CATSR2(SequentialRecommender):
