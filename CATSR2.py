@@ -5,7 +5,7 @@ from recbole.model.loss import BPRLoss
 from layers import TransformerSingleEncoder
 from loss_fct import element_weighted_loss, weight_decay,calculate_item_freq
 
-class CATSR(SequentialRecommender):
+class CATSR2(SequentialRecommender):
     def __init__(self, config, dataset, weight_dict=None):
         super(CATSR, self).__init__(config, dataset)
 
