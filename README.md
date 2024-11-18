@@ -28,12 +28,22 @@ cd data
 python data_process.py
 ```
 
-## Pretrain US Market
+## Pretrain US Market using the original algorithm
 ```bash
 python pretrain.py
 ```
 
-## Finetune with hypertuning (for example with 'ca')
+## Finetune with hypertuning (for example with 'ca') using the original algorithm
 ```bash
 python finetune.py --config_files='properties/CATSR.yaml properties/market.yaml' --params_file='model.hyper' --output_file='hyper_example.result' --weight_path='saved/CATSR-us-200.pth' --tool='Hyperopt' --dataset='ca'
+```
+
+## Pretrain US Market using the new algorithm
+```bash
+python pretrain2.py
+```
+
+## Finetune with hypertuning (for example with 'ca') using the new algorithm
+```bash
+python finetune2.py --config_files='properties/CATSR.yaml properties/market.yaml' --params_file='model.hyper' --output_file='hyper_example.result' --weight_path='saved/CATSR-us-200.pth' --tool='Hyperopt' --dataset='ca'
 ```
