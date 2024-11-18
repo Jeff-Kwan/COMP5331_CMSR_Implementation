@@ -1,4 +1,4 @@
-# Project Title
+### Implementation & Further Study for HKUST COMP5331 Based on "Pre-Training with Transferable Attention for Addressing Market Shifts in Cross-Market Sequential Recommendation" by Wang et al. 2024
 
 ## Requirements
 
