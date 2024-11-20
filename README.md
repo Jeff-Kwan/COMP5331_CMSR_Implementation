@@ -1,4 +1,5 @@
 ### Implementation & Further Study for HKUST COMP5331 Based on "Pre-Training with Transferable Attention for Addressing Market Shifts in Cross-Market Sequential Recommendation" by Wang et al. 2024
+This branch includes both the version 1: original implementation with some minor code modifications; and the version2: implementation with the transformer algorithm architecture modifications (all the files ending with "2").
 
 ## Requirements
 
